@@ -15,11 +15,12 @@
       const filename = file.name;
 
       try {
-        // Send filename to Lambda to get presigned URL
-        const response = await fetch('/your-lambda-function-endpoint', {
+        // Send filename to API Gateway to get presigned URL
+        const response = await fetch('https://2of0p6acoe.execute-api.us-east-1.amazonaws.com/upload/uploadfunc', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
+            'filename': 'filename'
           },
           body: JSON.stringify({ filename: filename })
         });
