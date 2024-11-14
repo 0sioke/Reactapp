@@ -29,6 +29,8 @@
           throw new Error(`Error fetching presigned URL: ${response.statusText}`);
         }
 
+        console.log('Filename sent to API Gateway successfully.');
+        
         const data = await response.json();
         const presignedUrl = data.presignedUrl;
 
