@@ -15,39 +15,25 @@
       const filename = file.name;
 
       try {
-        // Send filename to API Gateway to get presigned URL
-        const response = await fetch('https://2of0p6acoe.execute-api.us-east-1.amazonaws.com/upload/uploadfunc', {
+        // Send filename to API endpoint
+        const response = await fetch('https://2of0p6acoe.execute-api.us-east-1.amazonaws.com/upload', {
           method: 'ANY',
           headers: {
             'Content-Type': 'application/json'
-            'filename': 'filename'
+            'filename' : file.name
           },
           body: JSON.stringify({ filename: filename })
         });
 
         if (!response.ok) {
-          throw new Error(`Error fetching presigned URL: ${response.statusText}`);
+          throw new Error('Error sending filename to API endpoint');
         }
 
-        console.log('Filename sent to API Gateway successfully.');
-        
-        const data = await response.json();
-        const presignedUrl = data.presignedUrl;
-
-        // Upload the file to S3 using the presigned URL
-        const fileResponse = await fetch(presignedUrl, {
-          method: 'ANY',
-          body: file
-        });
-
-        if (fileResponse.ok) {
-          document.getElementById('result').textContent = 'File uploaded successfully!';
-        } else {
-          throw new Error('Error uploading file to S3');
-        }
+        console.log('Filename sent successfully:', filename);
+        document.getElementById('result').textContent = 'Filename sent successfully!';
       } catch (error) {
         console.error('Error:', error);
-        document.getElementById('result').textContent = 'An error occurred during the upload process. Please try again later.';
+        document.getElementById('result').textContent = 'Error sending filename.';
       }
     }
   </script>
