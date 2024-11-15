@@ -33,6 +33,39 @@
 
         console.log({ uploadUrl, key }); // Handle the response from the server
 
+
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = (event.loaded / event.total) * 100;
+            setUploadProgress(percentComplete);
+          }
+        };
+        
+        try {
+          await new Promise((resolve, reject) => {
+            xhr.onload = () => {
+              if (xhr.status === 200) {
+                resolve();
+              } else {
+                reject(new Error('Upload failed'));
+              }
+            };
+        
+            xhr.onerror = () => reject(new Error('Upload failed'));
+        
+            xhr.open('PUT', uploadUrl);
+            xhr.setRequestHeader('Content-Type', file.type);
+            xhr.send(file);
+          });
+        
+          document.getElementById('result').textContent = 'File uploaded successfully!';
+        } catch (error) {
+          console.error('Error:', error);
+          document.getElementById('result').textContent = 'Error uploading file. Please try again later.';
+        }
+                
         document.getElementById('result').textContent = 'File uploaded successfully!';
       } catch (error) {
         console.error('Error:', error);
